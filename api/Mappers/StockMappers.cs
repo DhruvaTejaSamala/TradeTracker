@@ -39,7 +39,7 @@ namespace api.Mappers
             {
                 Symbol = fmpStock.symbol,
                 CompanyName = fmpStock.companyName,
-                Purchase = (decimal)fmpStock.Price,
+                Purchase = (decimal)fmpStock.price,
                 LastDiv = fmpStock.lastDiv,
                 Industry = fmpStock.industry,
                 MarketCap = fmpStock.mktCap

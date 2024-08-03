@@ -38,8 +38,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "start-frontend": "npm start",
-    "start-backend": "cd ..\\api && dotnet watch run"
+    "start-frontend": "npm start  -host 0.0.0.0"
   },
   "eslintConfig": {
     "extends": [
