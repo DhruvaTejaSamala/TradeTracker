@@ -18,7 +18,7 @@ namespace api.Controllers
 {
     [Route("api/comment")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class CommentController : ControllerBase
     {
         

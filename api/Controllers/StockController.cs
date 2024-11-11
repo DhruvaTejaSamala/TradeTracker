@@ -15,7 +15,7 @@ namespace api.Controllers
 {
     [Route("api/stock")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class StockController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
