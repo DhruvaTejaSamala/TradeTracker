@@ -33,13 +33,23 @@ jobs:
         env:
           SERVER_IP: ${{ secrets.SSH_HOST }}
           SERVER_USER: ${{ secrets.SSH_USER }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
+          # Configure SSH key
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          # Add server to known hosts
+          ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
+
           # Transfer build files to server
           rsync -avz --delete-after \
-            -e "ssh -o StrictHostKeyChecking=no" \
-            ./frontend/build/ $SERVER_USER@$SERVER_IP:/var/www/html/project # Adjust the path as needed
-          
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            ./frontend/build/ $SERVER_USER@$SERVER_IP:/var/www/html/project
+            
           # Restart Nginx (or any other required services)
-          ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << EOF
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << EOF
             sudo systemctl restart nginx
           EOF
+
