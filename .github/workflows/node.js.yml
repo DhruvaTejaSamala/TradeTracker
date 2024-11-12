@@ -28,22 +28,20 @@ jobs:
         run: |
           zip -r build.zip ./frontend/build
 
-      - name: Copy Files via SSH
-        uses: appleboy/scp-action@v0.1.7
+      - name: Add SSH key
+        uses: webfactory/ssh-agent@v0.5.3
         with:
-          host: 54.81.34.210
-          username: ubuntu
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          source: "build.zip"
-          target: "~/project/"
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Copy files via SSH
+        run: |
+          scp -r ./frontend/build ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.REMOTE_PATH }}
 
       - name: SSH to Server and Deploy
         uses: appleboy/ssh-action@v0.1.7
         with:
-          host: 54.81.34.210
-          username: ubuntu
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            unzip -o ~/project/build.zip -d /var/www/html/project
-            rm ~/project/build.zip
             sudo systemctl restart nginx
