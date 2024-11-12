@@ -35,7 +35,7 @@ jobs:
           SERVER_USER: ${{ secrets.SSH_USER }}
         run: |
           # Transfer build files to server
-          sudo rsync -avz --delete-after \
+          rsync -avz --delete-after \
             -e "ssh -o StrictHostKeyChecking=no" \
             ./frontend/build/ $SERVER_USER@$SERVER_IP:/var/www/html/project # Adjust the path as needed
           
