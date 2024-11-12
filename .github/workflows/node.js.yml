@@ -28,19 +28,19 @@ jobs:
         run: |
           zip -r build.zip ./frontend/build
 
-      - name: Start SSH Agent and Add SSH Key
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          # Specify key type if needed
-          known-hosts: "54.81.34.210"  # Your server IP to avoid SSH known_hosts prompt
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "125.11.90.244 ssh-ed25519 YOUR_SERVER_PUBLIC_KEY_HERE" >> ~/.ssh/known_hosts
 
-      - name: Copy build files via SSH
+      - name: Copy build files to server
         env:
           TARGET_SERVER: ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
           REMOTE_PATH: ${{ secrets.REMOTE_PATH }}
         run: |
-          scp -r ./build $TARGET_SERVER:$REMOTE_PATH
+          scp -i ~/.ssh/id_ed25519 -r ./build $TARGET_SERVER:$REMOTE_PATH
 
       - name: SSH to Server and Deploy
         uses: appleboy/ssh-action@v0.1.7
