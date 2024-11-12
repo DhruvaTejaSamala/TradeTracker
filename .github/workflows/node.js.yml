@@ -35,7 +35,7 @@ jobs:
 
       - name: Copy files via SSH
         run: |
-          scp -r ./frontend/build ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.REMOTE_PATH }}
+          scp -r build.zip ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.REMOTE_PATH }}
 
       - name: SSH to Server and Deploy
         uses: appleboy/ssh-action@v0.1.7
@@ -44,4 +44,6 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
+            unzip -o ~/project/build.zip -d /var/www/html/project
+            rm ~/project/build.zip
             sudo systemctl restart nginx
