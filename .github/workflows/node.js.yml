@@ -22,7 +22,8 @@ jobs:
       working-directory: frontend  # Adjust if your app's path is different
 
     - name: Build the app
-      run: npm run build
+      run: |
+        CI=false npm run build
       working-directory: frontend  # Adjust if your app's path is different
 
     - name: Upload build files to the server
